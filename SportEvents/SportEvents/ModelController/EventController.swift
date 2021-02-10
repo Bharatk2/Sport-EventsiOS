@@ -13,13 +13,14 @@ enum NetworkError: Error {
     case badError(String)
 }
 
+
 class EventController {
     
-    var cache = Cache<NSString, UIImage>()
+    var cache = Cache<NSString, AnyObject>()
     var dataLoader: DataLoader?
+    static var shared = EventController()
     private lazy var decoder: JSONDecoder = {
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return decoder
     }()
@@ -29,17 +30,16 @@ class EventController {
         
     }
     
-    func getEvents(completion: @escaping ([Event]?, Error?) -> Void) {
+    func getEvents(completion: @escaping (EventResults?, Error?) -> Void) {
         
-        let queryPerPage = URLQueryItem(name: "per_page", value: "25")
-        let queryClientID = URLQueryItem(name: "client_id", value: ClientKey.clientKey)
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "https"
-        urlComponents.host = "api.seatgeek.com"
-        urlComponents.path = "/2/events"
-        urlComponents.queryItems = [queryPerPage, queryClientID]
-        
-        guard let requestURL = urlComponents.url else {
+        var urlComponents = URLComponents(url: Endpoint.events, resolvingAgainstBaseURL: false)
+        let queryItems = [
+            URLQueryItem(name: "per_page", value: "25"),
+            URLQueryItem(name: "client_id", value: ClientKey.clientKey)
+        ]
+        urlComponents?.queryItems = queryItems
+        print(urlComponents?.url ?? "")
+        guard let requestURL = urlComponents?.url else {
             completion(nil, NetworkError.badURL("The request url was invalid"))
             return
         }
@@ -56,13 +56,14 @@ class EventController {
                 return
             }
             
-            let event = [Event].self
+            let event = EventResults.self
             
             do {
                 let events = try self.decoder.decode(event, from: data)
                 print(events)
                 return completion(events, nil)
             } catch {
+                
                 return completion(nil, NetworkError.badData("There was an error decoding data"))
             }
         })
