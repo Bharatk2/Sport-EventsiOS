@@ -18,3 +18,10 @@ enum ClientKey {}
 extension ClientKey {
     static var clientKey = "MjE1Mzg2MzB8MTYxMjkyNjA4Mi42NDI0MzYz"
 }
+
+enum HTTPMethod: String {
+    case get = "GET"
+    case put = "PUT"
+    case post = "POST"
+    case delete = "DELETE"
+}
