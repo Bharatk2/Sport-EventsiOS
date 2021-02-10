@@ -48,9 +48,9 @@ class EventController {
         
         dataLoader?.loadData(from: request, completion: { data, _, error in
             if let error = error {
-               return completion(nil, error)
+                return completion(nil, error)
             }
-           
+            
             guard let data = data else {
                 completion(nil, NetworkError.badData("No data was returned"))
                 return
@@ -69,7 +69,33 @@ class EventController {
         
     }
     
-    func getImages(imageURL: String, completion: @escaping (UIImage, Error?) -> Void) {
+    func getImages(imageURL: String, completion: @escaping (UIImage?, Error?) -> Void) {
+        
+        let imageString = NSString(string: imageURL)
+        if let imageFromCache = cache.value(for: imageString) as? UIImage {
+            completion(imageFromCache, nil)
+            return
+        }
+        guard let imageURL = URL(string: imageURL) else {
+            return completion(nil, NetworkError.badURL("The url for image was incorrect"))
+        }
+        
+        dataLoader?.loadData(from: imageURL, completion: { data, _, error in
+            if let error = error {
+                NSLog("error in fetching image :\(error)")
+                return
+            }
+            
+            guard let data = data,
+                  let image = UIImage(data: data) else {
+                completion(nil, NetworkError.badData("there was an error in image data"))
+                return
+            }
+            
+            self.cache.cache(value: image, for: imageString)
+            completion(image, nil)
+            
+        })
         
     }
     
