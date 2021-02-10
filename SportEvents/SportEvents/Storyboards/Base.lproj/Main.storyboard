@@ -30,7 +30,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="FIp-0E-a4K">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="" id="FIp-0E-a4K" customClass="ContentCell" customModule="SportEvents" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="128" height="128"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="QiL-Jh-a3x">
@@ -121,6 +121,10 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="OPX-Ud-diM" id="bvf-fN-KIG"/>
+                                    <outlet property="delegate" destination="OPX-Ud-diM" id="XFQ-hX-5uz"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dt4-pO-0gp"/>
@@ -157,24 +161,11 @@
                                 </constraints>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Los Angeles Rams at Tampa Bay Buccaneers" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0jc-XB-jWz">
-                                <rect key="frame" x="20" y="64" width="374" height="53"/>
+                                <rect key="frame" x="20" y="64" width="295" height="53"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24 November, 2020 2:00 pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IyD-WJ-uvE">
-                                <rect key="frame" x="20" y="510" width="374" height="25.5"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IuA-zC-YzS">
-                                <rect key="frame" x="20" y="543.5" width="374" height="2"/>
-                                <color key="backgroundColor" systemColor="quaternaryLabelColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="2" id="A59-5B-GX1"/>
-                                </constraints>
-                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="OyX-Nb-dyN">
                                 <rect key="frame" x="20" y="571" width="374" height="147"/>
                                 <subviews>
@@ -204,24 +195,50 @@
                                     </label>
                                 </subviews>
                             </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24 November, 2020 2:00 pm" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IyD-WJ-uvE">
+                                <rect key="frame" x="20" y="510" width="374" height="25.5"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IuA-zC-YzS">
+                                <rect key="frame" x="20" y="543.5" width="374" height="2"/>
+                                <color key="backgroundColor" systemColor="quaternaryLabelColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="2" id="A59-5B-GX1"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EC8-hr-wdC">
+                                <rect key="frame" x="345" y="64" width="39" height="46"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="46" id="IIs-ic-5WP"/>
+                                    <constraint firstAttribute="width" constant="39" id="N1G-aW-Frl"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <state key="normal" image="heart" catalog="system"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="z74-C1-OYO"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="z74-C1-OYO" firstAttribute="trailing" secondItem="EC8-hr-wdC" secondAttribute="trailing" constant="30" id="6RE-jl-b5H"/>
                             <constraint firstItem="0jc-XB-jWz" firstAttribute="top" secondItem="z74-C1-OYO" secondAttribute="top" constant="20" id="9y1-ny-SIc"/>
                             <constraint firstItem="OyX-Nb-dyN" firstAttribute="top" secondItem="IuA-zC-YzS" secondAttribute="bottom" constant="25.5" id="FoW-tp-gmq"/>
                             <constraint firstItem="IyD-WJ-uvE" firstAttribute="top" secondItem="Ezv-Gw-gPS" secondAttribute="bottom" constant="17" id="GRM-b0-TPx"/>
                             <constraint firstItem="z74-C1-OYO" firstAttribute="bottom" secondItem="OyX-Nb-dyN" secondAttribute="bottom" constant="144" id="Jaj-dR-Hah"/>
+                            <constraint firstItem="EC8-hr-wdC" firstAttribute="top" secondItem="z74-C1-OYO" secondAttribute="top" constant="20" id="Tey-V9-h8c"/>
                             <constraint firstItem="IuA-zC-YzS" firstAttribute="top" secondItem="IyD-WJ-uvE" secondAttribute="bottom" constant="8" symbolic="YES" id="WFA-d9-bkb"/>
-                            <constraint firstItem="z74-C1-OYO" firstAttribute="trailing" secondItem="0jc-XB-jWz" secondAttribute="trailing" constant="20" id="ayg-Rx-eYW"/>
                             <constraint firstItem="Ezv-Gw-gPS" firstAttribute="leading" secondItem="z74-C1-OYO" secondAttribute="leading" constant="20" id="bSZ-Jy-BBr"/>
                             <constraint firstItem="z74-C1-OYO" firstAttribute="trailing" secondItem="Ezv-Gw-gPS" secondAttribute="trailing" constant="46" id="eph-DZ-mhd"/>
                             <constraint firstItem="OyX-Nb-dyN" firstAttribute="leading" secondItem="z74-C1-OYO" secondAttribute="leading" constant="20" id="hem-gK-uGV"/>
                             <constraint firstItem="Ezv-Gw-gPS" firstAttribute="top" secondItem="0jc-XB-jWz" secondAttribute="bottom" constant="28" id="jNu-c4-rn2"/>
+                            <constraint firstItem="IuA-zC-YzS" firstAttribute="trailing" secondItem="IyD-WJ-uvE" secondAttribute="trailing" id="n4M-ix-xXK"/>
+                            <constraint firstItem="IuA-zC-YzS" firstAttribute="leading" secondItem="IyD-WJ-uvE" secondAttribute="leading" id="o95-MD-g7z"/>
                             <constraint firstItem="IyD-WJ-uvE" firstAttribute="leading" secondItem="z74-C1-OYO" secondAttribute="leading" constant="20" id="sst-bz-ohj"/>
                             <constraint firstItem="z74-C1-OYO" firstAttribute="trailing" secondItem="IyD-WJ-uvE" secondAttribute="trailing" constant="20" id="xaf-fc-Ox2"/>
                             <constraint firstItem="0jc-XB-jWz" firstAttribute="leading" secondItem="z74-C1-OYO" secondAttribute="leading" constant="20" id="y0L-i9-kTF"/>
                             <constraint firstItem="z74-C1-OYO" firstAttribute="trailing" secondItem="OyX-Nb-dyN" secondAttribute="trailing" constant="20" id="yyj-aJ-hXB"/>
+                            <constraint firstItem="EC8-hr-wdC" firstAttribute="leading" secondItem="0jc-XB-jWz" secondAttribute="trailing" constant="30" id="yzI-DN-l1l"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="a3V-MJ-tJO"/>
@@ -250,6 +267,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="heart" catalog="system" width="128" height="109"/>
         <image name="terminal" catalog="system" width="128" height="93"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

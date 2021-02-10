@@ -16,8 +16,8 @@
                 <rect key="frame" x="0.0" y="0.0" width="249" height="341"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="luX-Dd-3AK">
-                        <rect key="frame" x="0.0" y="0.0" width="249" height="238.5"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.fill.checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="luX-Dd-3AK">
+                        <rect key="frame" x="0.0" y="1.5" width="249" height="235.5"/>
                     </imageView>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BU7-N8-6nB">
                         <rect key="frame" x="0.0" y="238.5" width="249" height="102.5"/>
@@ -90,5 +90,6 @@
     </objects>
     <resources>
         <image name="calendar" catalog="system" width="128" height="106"/>
+        <image name="person.fill.checkmark" catalog="system" width="128" height="88"/>
     </resources>
 </document>
