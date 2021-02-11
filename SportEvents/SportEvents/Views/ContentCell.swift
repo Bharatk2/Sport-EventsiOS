@@ -9,24 +9,18 @@ import UIKit
 
 class ContentCell: UICollectionViewCell {
     
+    // MARK: - Properties
+    weak var delegate: EventFavoritedProtocol?
+    weak var favoriteDelegate: FavoriteEventDelegate?
+    var event: EventResults.Events?
+    
+    // MARK: - Outlets
     @IBOutlet weak var eventImage: UIImageView!
     @IBOutlet weak var eventTitle: UILabel!
     @IBOutlet weak var eventLocation: UILabel!
     @IBOutlet weak var eventDate: UILabel!
     @IBOutlet weak var cellView: UIView!
-    weak var delegate: EventFavoritedProtocol?
-    weak var favoriteDelegate: FavoriteEventDelegate?
-    var event: EventResults.Events? 
    
-
-    func updateViews() {
-        guard let event = event else { return }
-        eventTitle.text = event.title
-        eventLocation.text = event.city
-        eventDate.text = "\(event.datetime_utc)"
-    }
-    
- 
 
 }
 

@@ -11,23 +11,28 @@ protocol LikedEventDelegate: AnyObject {
 import UIKit
 
 class EventsDetailViewController: UIViewController {
-
-    static var shared = EventsDetailViewController()
-    @IBOutlet weak var performerImage: UIImageView!
-    @IBOutlet weak var eventTitle: UILabel!
-    @IBOutlet weak var performerName: UILabel!
-    @IBOutlet weak var favoriteButton: UIButton!
+    
+    // MARK: - Properties
     var event: EventResults.Events?
     var delegate: EventFavoritedProtocol?
     var favoriteEvents = [EventResults.Events?]()
     var isFavorited = false
     weak var likedEventDelegate: FavoriteEventDelegate?
+    
+    // MARK: - Outlets
+    @IBOutlet weak var performerImage: UIImageView!
+    @IBOutlet weak var eventTitle: UILabel!
+    @IBOutlet weak var performerName: UILabel!
+    @IBOutlet weak var favoriteButton: UIButton!
+    
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
 
     }
     
+    // MARK: - Actions
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
         guard let event = event else { return }
         if sender.currentImage == UIImage(systemName: "iconLike") {
@@ -42,7 +47,7 @@ class EventsDetailViewController: UIViewController {
      
         }
     }
-    
+    // MARK: - Methods
     private func updateViews() {
         guard let event = event else { return }
         self.eventTitle.text = event.title

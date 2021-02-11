@@ -6,19 +6,22 @@
 //
 
 import Foundation
+
 protocol FavoriteEventDelegate: class {
     func update(event e: EventResults.Events, eventAction: EventAction)
-    
 }
 
 class FavoriteEventsController: FavoriteEventDelegate {
-  
-    var events = [EventResults.Events]()
     
+    // MARK: - Properties
+    var events = [EventResults.Events]()
+    static var shared = FavoriteEventsController()
+    
+    //MARK: - Initializer
     init() {
         saveToPersistentStore()
     }
-    static var shared = FavoriteEventsController()
+    
     func findEventIndex(_ t: EventResults.Events) -> Int? {
         if let index = events.firstIndex(where: { $0 == t }) {
             return index
@@ -26,6 +29,7 @@ class FavoriteEventsController: FavoriteEventDelegate {
             return nil
         }
     }
+    // MARK: - Methods
     func update(event e: EventResults.Events, eventAction: EventAction) {
         loadFromPersistentStoreEvents { events, _ in
             var favoriteEvents = events
@@ -70,21 +74,6 @@ class FavoriteEventsController: FavoriteEventDelegate {
             
         } catch {
             print("Unable to save event to plist: \(error)")
-        }
-    }
-    
-    func loadFromPersistentStore() {
-        
-        do {
-            guard let eventURL = eventURL else { return }
-            
-            let eventData = try Data(contentsOf: eventURL)
-            let decoder = PropertyListDecoder()
-            let decodedEvent = try decoder.decode([EventResults.Events].self, from: eventData)
-            
-            self.events = decodedEvent
-        } catch {
-            print("Unable to open event plist: \(error)")
         }
     }
     

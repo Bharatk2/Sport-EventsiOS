@@ -10,20 +10,25 @@ protocol EventFavoritedProtocol: class {
     func didFavoriteEvent(event: EventResults.Events)
 }
 class EventsTableViewCell: UITableViewCell {
-
+    
+    // MARK: - Properties
+    weak var favoriteDelegate: FavoriteEventDelegate?
+    weak var delegate: EventFavoritedProtocol?
+    
+    // MARK: - Outlets
     @IBOutlet weak var performerImage: UIImageView!
     @IBOutlet weak var eventTitleLabel: UILabel!
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
-    
     @IBOutlet weak var cellView: UIView!
-    weak var favoriteDelegate: FavoriteEventDelegate?
-    weak var delegate: EventFavoritedProtocol?
+    
+    // MARK: - Computed Properties
     var event: EventResults.Events? {
         didSet {
             updateViews()
         }
     }
+    
     var date: String {
         let formatter = DateFormatter()
         guard let event = event?.datetime_utc else { return "" }
@@ -34,6 +39,7 @@ class EventsTableViewCell: UITableViewCell {
         return date
     }
     
+    // MARK: - Methods
     @objc private func handleFavoriteButtonTapped() {
         guard let event = event else { return }
         delegate?.didFavoriteEvent(event: event)

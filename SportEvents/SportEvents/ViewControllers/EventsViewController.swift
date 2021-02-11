@@ -9,16 +9,19 @@ import UIKit
 import DZNEmptyDataSet
 class EventsViewController: UIViewController, LikedEventDelegate {
     
+    // MARK: - Outlets
     @IBOutlet var collectionView: UICollectionView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     
+    // MARK: - Properties
     var events = [EventResults.Events]()
     var favoriteEvents = [EventResults.Events]()
     var filteredEvents = [EventResults.Events]()
     var eventController = FavoriteEventsController()
     var searching = false
     
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.isHidden = true
@@ -48,6 +51,7 @@ class EventsViewController: UIViewController, LikedEventDelegate {
         self.collectionView.reloadData()
     }
     
+    // MARK: - Methods
     fileprivate func setupCollectionView() {
         collectionView?.backgroundColor = .white
         
@@ -122,21 +126,19 @@ class EventsViewController: UIViewController, LikedEventDelegate {
                let collectionIndex = collectionView.indexPath(for: cell) {
                 let collectionEvent =  favoriteEvents[collectionIndex.row]
                 eventDetailVC.event = collectionEvent
-                guard let image = UIImage(named: "iconLike") else { return }
-                
                 eventDetailVC.likedEventDelegate = self
             }
         }
     }
     
 }
-
+// MARK: - Extensions
 extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searching {
             return filteredEvents.count
         } else {
-        return events.count
+            return events.count
         }
     }
     
@@ -154,15 +156,15 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         } else {
-        cell.event = events[indexPath.row]
-        cell.favoriteDelegate = self
-        guard let imageURL = cell.event?.image else { return cell }
-        EventController.shared.getImages(imageURL: imageURL) { image, _ in
-            DispatchQueue.main.async {
-                cell.performerImage.image = image
-                
+            cell.event = events[indexPath.row]
+            cell.favoriteDelegate = self
+            guard let imageURL = cell.event?.image else { return cell }
+            EventController.shared.getImages(imageURL: imageURL) { image, _ in
+                DispatchQueue.main.async {
+                    cell.performerImage.image = image
+                    
+                }
             }
-        }
         }
         cell.performerImage.layer.cornerRadius = 12
         
@@ -209,15 +211,6 @@ extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollection
         return CGSize(width: 249, height: 290)
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        if let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeader{
-            sectionHeader.sectionHeaderlabel.text = "Section \(indexPath.section)"
-            return sectionHeader
-        }
-        return UICollectionReusableView()
-    }
-    
 }
 
 extension EventsViewController: FavoriteEventDelegate {
@@ -255,10 +248,6 @@ extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  
     }
 }
 
-class SectionHeader: UICollectionReusableView {
-    @IBOutlet weak var sectionHeaderlabel: UILabel!
-}
-
 extension EventsViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func configureSearchController() {
         let searchController = UISearchController()
@@ -271,16 +260,16 @@ extension EventsViewController: UISearchBarDelegate, UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let filter = searchController.searchBar.text,
               !filter.isEmpty else { return }
-
+        
         searching = true
         filteredEvents = events.filter({ $0.type.lowercased().contains(filter.lowercased()) })
         tableView.reloadData()
-      
+        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searching = false
         tableView.reloadData()
-      
+        
     }
 }
