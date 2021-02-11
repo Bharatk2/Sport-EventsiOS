@@ -6,27 +6,48 @@
 //
 
 import XCTest
-
+@testable import SportEvents
 class SportEventsTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        measure {
-            // Put the code you want to measure the time of here.
+    let timeout: TimeInterval = 5
+  
+    func testFetchAllEvents() throws {
+        let expectation = self.expectation(description: "fetch is succesfull")
+        
+        EventController.shared.getEvents { events, error in
+            XCTAssertNil(error)
+            XCTAssertNotNil(events)
+            print("these are succefull events : \(events)")
+            expectation.fulfill()
         }
+        wait(for: [expectation], timeout: timeout)
     }
+    
+    func testDecoding() throws {
+        let url = URL(string: "https://api.seatgeek.com/2/events")!
+        let expectation = self.expectation(description: "Data decodes from the backend")
+        URLSession.shared.dataTask(with: url) { data, response, error in
+          XCTAssertNil(error)
+          do {
+            let response = try XCTUnwrap(response as? HTTPURLResponse)
+            XCTAssertEqual(response.statusCode, 200)
+
+            let data = try XCTUnwrap(data)
+           
+            XCTAssertNoThrow(
+                try JSONDecoder().decode([EventResults.Events].self, from: data)
+              
+            )
+           
+          }
+          catch { }
+        }
+        .resume()
+        expectation.fulfill()
+        waitForExpectations(timeout: timeout)
+    }
+    
+    
+    
 
 }
