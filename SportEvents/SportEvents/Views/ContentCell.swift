@@ -14,20 +14,18 @@ class ContentCell: UICollectionViewCell {
     @IBOutlet weak var eventLocation: UILabel!
     @IBOutlet weak var eventDate: UILabel!
     @IBOutlet weak var cellView: UIView!
-    
-    var event: EventResults.Events? {
-        didSet {
-            updateViews()
-        }
+    weak var delegate: EventFavoritedProtocol?
+    var event: EventResults.Events? 
+   
+    @objc private func handleFavoriteButtonTapped() {
+        guard let event = event else { return }
+        delegate?.didFavoriteEvent(event: event)
     }
-
-
-     
     func updateViews() {
         guard let event = event else { return }
         eventTitle.text = event.title
         eventLocation.text = event.city
-        eventDate.text = "\(event.dateTimeLocal?.convertToMonthYearFormat())"
+        eventDate.text = "\(event.datetimeUtc)"
     }
     
  

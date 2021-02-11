@@ -6,13 +6,19 @@
 //
 
 import Foundation
+enum EventAction: Int, Codable {
+
+    case favorited
+    case removed
+}
+
 struct EventResults: Codable, Equatable, Hashable {
-    let events: [Events]
+    var events: [Events]
 
     struct Events: Codable, Equatable, Hashable {
         let title: String
         let eventURL: String
-        let dateTimeLocal: Date?
+        let datetimeUtc: String?
         let type: String
         let id: Int
         
@@ -35,7 +41,7 @@ struct EventResults: Codable, Equatable, Hashable {
          
             case title = "title"
             case eventURL = "url"
-            case dateTimeLocal = "datetime_local"
+            case datetimeUtc = "datetime_utc"
             case type
             case id
             case stats
@@ -63,7 +69,7 @@ struct EventResults: Codable, Equatable, Hashable {
             let container = try decoder.container(keyedBy: EventKeys.self)
             title = try container.decode(String.self, forKey: .title)
             eventURL = try container.decode(String.self, forKey: .eventURL)
-            dateTimeLocal = try container.decodeIfPresent(Date.self, forKey: .dateTimeLocal)
+            datetimeUtc = try container.decodeIfPresent(String.self, forKey: .datetimeUtc)
             type = try container.decode(String.self, forKey: .type)
             id = try container.decode(Int.self, forKey: .id)
             let statsDictionary = try container.nestedContainer(keyedBy: EventKeys.StatsKeys.self, forKey: .stats)

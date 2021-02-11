@@ -6,7 +6,9 @@
 //
 
 import UIKit
-
+protocol EventFavoritedProtocol: class {
+    func didFavoriteEvent(event: EventResults.Events)
+}
 class EventsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var performerImage: UIImageView!
@@ -15,27 +17,25 @@ class EventsTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     
     @IBOutlet weak var cellView: UIView!
+    
+    weak var delegate: EventFavoritedProtocol?
     var event: EventResults.Events? {
         didSet {
             updateViews()
         }
     }
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    
+    @objc private func handleFavoriteButtonTapped() {
+        guard let event = event else { return }
+        delegate?.didFavoriteEvent(event: event)
     }
     
     func updateViews() {
         guard let event = event else { return }
         eventTitleLabel.text = event.title
         locationLabel.text = event.city
-        timeLabel.text = "\(event.dateTimeLocal)"
+        timeLabel.text = "\(event.datetimeUtc)"
     }
 
 }

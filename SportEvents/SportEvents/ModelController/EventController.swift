@@ -70,6 +70,61 @@ class EventController {
         
     }
     
+    func getFavoriteEvents(completion: @escaping (EventResults?, Error?) -> Void) {
+        
+        var urlComponents = URLComponents(url: Endpoint.events, resolvingAgainstBaseURL: false)
+        let queryItems = [
+            URLQueryItem(name: "per_page", value: "25"),
+            URLQueryItem(name: "client_id", value: ClientKey.clientKey)
+        ]
+        urlComponents?.queryItems = queryItems
+        print(urlComponents?.url ?? "")
+        guard let requestURL = urlComponents?.url else {
+            completion(nil, NetworkError.badURL("The request url was invalid"))
+            return
+        }
+        var request = URLRequest(url: requestURL)
+        request.httpMethod = HTTPMethod.get.rawValue
+        
+        dataLoader?.loadData(from: request, completion: { data, _, error in
+            if let error = error {
+                return completion(nil, error)
+            }
+            
+            guard let data = data else {
+                completion(nil, NetworkError.badData("No data was returned"))
+                return
+            }
+            
+            let event = EventResults.self
+            
+            do {
+                let events = try self.decoder.decode(event, from: data)
+                print(events)
+                return completion(events, nil)
+            } catch {
+                
+                return completion(nil, NetworkError.badData("There was an error decoding data"))
+            }
+        })
+      
+       
+        
+    }
+    
+    func update(event e: EventResults.Events, eventAction: EventAction) {
+        getFavoriteEvents { events, _ in
+            var favoriteEvents = events?.events
+            switch eventAction {
+            case .favorited:
+                favoriteEvents?.append(e)
+            case .removed:
+                favoriteEvents?.removeAll()
+             
+            }
+        }
+    }
+    
     func getImages(imageURL: String, completion: @escaping (UIImage?, Error?) -> Void) {
         
         let imageString = NSString(string: imageURL)

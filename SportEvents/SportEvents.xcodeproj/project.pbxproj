@@ -24,7 +24,7 @@
 		C575CC3225D397B200D8B153 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575CC3125D397B200D8B153 /* Cache.swift */; };
 		C5D1481725D4426F00F4D5C2 /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1481625D4426F00F4D5C2 /* EventsTableViewCell.swift */; };
 		C5D1482825D4806200F4D5C2 /* CollectionViewCellFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1482725D4806200F4D5C2 /* CollectionViewCellFlow.swift */; };
-		C5D1482F25D49B1F00F4D5C2 /* EventsTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C5D1482D25D49B1F00F4D5C2 /* EventsTableViewCell.xib */; };
+		C5D1483D25D4AC5100F4D5C2 /* FavoriteEventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1483C25D4AC5100F4D5C2 /* FavoriteEventsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,7 +68,7 @@
 		C575CC3125D397B200D8B153 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		C5D1481625D4426F00F4D5C2 /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
 		C5D1482725D4806200F4D5C2 /* CollectionViewCellFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellFlow.swift; sourceTree = "<group>"; };
-		C5D1482D25D49B1F00F4D5C2 /* EventsTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EventsTableViewCell.xib; sourceTree = "<group>"; };
+		C5D1483C25D4AC5100F4D5C2 /* FavoriteEventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				C575CC0325D36D0200D8B153 /* EventController.swift */,
+				C5D1483C25D4AC5100F4D5C2 /* FavoriteEventsController.swift */,
 			);
 			path = ModelController;
 			sourceTree = "<group>";
@@ -198,7 +199,6 @@
 				C575CC1725D3733700D8B153 /* ContentCell.swift */,
 				C5D1481625D4426F00F4D5C2 /* EventsTableViewCell.swift */,
 				C5D1482725D4806200F4D5C2 /* CollectionViewCellFlow.swift */,
-				C5D1482D25D49B1F00F4D5C2 /* EventsTableViewCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -326,7 +326,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C575CBC225D36A3900D8B153 /* LaunchScreen.storyboard in Resources */,
-				C5D1482F25D49B1F00F4D5C2 /* EventsTableViewCell.xib in Resources */,
 				C575CBBF25D36A3900D8B153 /* Assets.xcassets in Resources */,
 				C575CBBD25D36A3500D8B153 /* Main.storyboard in Resources */,
 			);
@@ -361,6 +360,7 @@
 				C575CC0425D36D0200D8B153 /* EventController.swift in Sources */,
 				C575CC3225D397B200D8B153 /* Cache.swift in Sources */,
 				C575CBB825D36A3500D8B153 /* SceneDelegate.swift in Sources */,
+				C5D1483D25D4AC5100F4D5C2 /* FavoriteEventsController.swift in Sources */,
 				C575CC0925D36D1E00D8B153 /* EventsViewController.swift in Sources */,
 				C575CC2A25D396D000D8B153 /* DataLoader.swift in Sources */,
 				C5D1482825D4806200F4D5C2 /* CollectionViewCellFlow.swift in Sources */,
