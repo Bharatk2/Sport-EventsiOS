@@ -18,7 +18,7 @@
 
 ## Installation
 
-- Clone or download zip of the repository and go to your terminal cd project where Xcode & type pod install.
+- Clone or download zip of the repository and go to your terminal, cd project where Xcode & type pod install.
 
 ## Contribute
 
