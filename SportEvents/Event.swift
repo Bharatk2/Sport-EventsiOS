@@ -7,7 +7,6 @@
 
 import Foundation
 enum EventAction: Int, Codable {
-
     case favorited
     case removed
 }
@@ -18,21 +17,18 @@ struct EventResults: Codable, Equatable, Hashable {
     struct Events: Codable, Equatable, Hashable {
         let title: String
         let eventURL: String
-        let datetimeUtc: String?
+        let datetime_utc: Date?
         let type: String
         let id: Int
-        
         // stats
         let listingCount: Int?
         let lowestPrice: Int?
         let averagePrice: Int?
         let highestPrice: Int?
-        
         // performers
         let name: String
         let image: String
         let url: String
-        
         // Venue
         let city: String
         let terminalName: String
@@ -41,9 +37,7 @@ struct EventResults: Codable, Equatable, Hashable {
          
             case title = "title"
             case eventURL = "url"
-            case datetimeUtc = "datetime_utc"
-            case type
-            case id
+            case datetime_utc = "datetime_utc"
             case stats
             case performers
             case venue
@@ -63,13 +57,15 @@ struct EventResults: Codable, Equatable, Hashable {
                 case city
                 case terminalName = "name"
             }
+            case type
+            case id
         }
        
          init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: EventKeys.self)
             title = try container.decode(String.self, forKey: .title)
             eventURL = try container.decode(String.self, forKey: .eventURL)
-            datetimeUtc = try container.decodeIfPresent(String.self, forKey: .datetimeUtc)
+            datetime_utc = try container.decodeIfPresent(Date.self, forKey: .datetime_utc)
             type = try container.decode(String.self, forKey: .type)
             id = try container.decode(Int.self, forKey: .id)
             let statsDictionary = try container.nestedContainer(keyedBy: EventKeys.StatsKeys.self, forKey: .stats)

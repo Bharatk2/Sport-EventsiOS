@@ -224,6 +224,7 @@
                     <navigationItem key="navigationItem" id="dB3-Zk-m5p"/>
                     <connections>
                         <outlet property="collectionView" destination="BiK-v5-K2E" id="iSO-La-au0"/>
+                        <outlet property="searchBar" destination="vSt-gf-dG9" id="qjM-44-hbh"/>
                         <outlet property="tableView" destination="1Zh-1F-IVM" id="Nuc-gL-nOZ"/>
                     </connections>
                 </viewController>

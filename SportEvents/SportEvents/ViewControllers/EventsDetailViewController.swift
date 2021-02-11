@@ -21,56 +21,30 @@ class EventsDetailViewController: UIViewController {
     var delegate: EventFavoritedProtocol?
     var favoriteEvents = [EventResults.Events?]()
     var isFavorited = false
-    weak var likedEventDelegate: LikedEventDelegate?
+    weak var likedEventDelegate: FavoriteEventDelegate?
     override func viewDidLoad() {
         super.viewDidLoad()
         updateViews()
-        favoriteButton.addTarget(self, action: #selector(self.likeButtonTapped(_:)) , for: .touchUpInside)
-        // Do any additional setup after loading the view.
+
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    @objc func likeButtonTapped(_ sender: UIButton) {
-        guard let eventDelegate = likedEventDelegate,
-              let event = event else { return }
-        
-        eventDelegate.likeEventButtonTapped(event: event)
-        }
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
         guard let event = event else { return }
         if sender.currentImage == UIImage(systemName: "iconLike") {
             guard let image = UIImage(named: "Like") else { return }
             sender.setImage(image, for: .selected)
-         
-            FavoriteEventsController.shared.update(event: event, eventAction: .removed)
+            likedEventDelegate?.update(event: event, eventAction: .removed)
            
         } else {
             guard let image = UIImage(named: "iconLike") else { return }
             sender.setImage(image, for: .normal)
-        
-            delegate?.didFavoriteEvent(event: event)
-            FavoriteEventsController.shared.loadFromPersistentStore()
-            FavoriteEventsController.shared.update(event: event, eventAction: .favorited)
+            likedEventDelegate?.update(event: event, eventAction: .favorited)
+     
         }
-      
-      
-       
     }
     
     private func updateViews() {
-     
-        
         guard let event = event else { return }
-        
         self.eventTitle.text = event.title
         self.performerName.text = event.name
         let performerImage = event.image
@@ -82,7 +56,4 @@ class EventsDetailViewController: UIViewController {
         }
         
     }
-    
-    
-
 }

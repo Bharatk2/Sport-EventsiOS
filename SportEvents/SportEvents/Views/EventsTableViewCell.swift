@@ -17,14 +17,22 @@ class EventsTableViewCell: UITableViewCell {
     @IBOutlet weak var timeLabel: UILabel!
     
     @IBOutlet weak var cellView: UIView!
-    
+    weak var favoriteDelegate: FavoriteEventDelegate?
     weak var delegate: EventFavoritedProtocol?
     var event: EventResults.Events? {
         didSet {
             updateViews()
         }
     }
-    
+    var date: String {
+        let formatter = DateFormatter()
+        guard let event = event?.datetime_utc else { return "" }
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        let date = formatter.string(from: event)
+        let formattedDisplayDate = DateFormatter()
+        formattedDisplayDate.dateFormat = "EEEE, d MMM yyyy hh:mm a"
+        return date
+    }
     
     @objc private func handleFavoriteButtonTapped() {
         guard let event = event else { return }
@@ -35,9 +43,10 @@ class EventsTableViewCell: UITableViewCell {
         guard let event = event else { return }
         eventTitleLabel.text = event.title
         locationLabel.text = event.city
-        timeLabel.text = "\(event.datetimeUtc)"
+        timeLabel.text = date
     }
 
 }
+
 
 

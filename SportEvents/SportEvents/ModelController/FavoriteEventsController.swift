@@ -6,18 +6,21 @@
 //
 
 import Foundation
-
-protocol FavoriteEventDelegate: AnyObject {
-    var events: [EventResults.Events]? { get set }
+protocol FavoriteEventDelegate: class {
+    func update(event e: EventResults.Events, eventAction: EventAction)
+    
 }
+
 class FavoriteEventsController: FavoriteEventDelegate {
-    var events: [EventResults.Events]?
+  
+    var events = [EventResults.Events]()
     
-    
-    
+    init() {
+        saveToPersistentStore()
+    }
     static var shared = FavoriteEventsController()
     func findEventIndex(_ t: EventResults.Events) -> Int? {
-        if let index = events!.firstIndex(where: { $0 == t }) {
+        if let index = events.firstIndex(where: { $0 == t }) {
             return index
         } else {
             return nil
@@ -30,11 +33,12 @@ class FavoriteEventsController: FavoriteEventDelegate {
             case .favorited:
                 favoriteEvents.append(e)
                 print(favoriteEvents)
-                
+                self.saveToPersistentStore()
             case .removed:
                 favoriteEvents.removeAll()
                 
             }
+            self.saveToPersistentStore()
         }
         
         saveToPersistentStore()
