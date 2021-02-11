@@ -17,7 +17,7 @@ struct EventResults: Codable, Equatable, Hashable {
     struct Events: Codable, Equatable, Hashable {
         let title: String
         let eventURL: String
-        let datetime_utc: Date?
+        let datetimeLocal: String
         let type: String
         let id: Int
         // stats
@@ -37,15 +37,15 @@ struct EventResults: Codable, Equatable, Hashable {
          
             case title = "title"
             case eventURL = "url"
-            case datetime_utc = "datetime_utc"
+            case datetimeLocal
             case stats
             case performers
             case venue
             enum StatsKeys: String, CodingKey {
-                case listingCount = "listing_count"
-                case averagePrice = "average_price"
-                case lowestPrice = "lowest_price"
-                case highestPrice = "highest_price"
+                case listingCount
+                case averagePrice
+                case lowestPrice 
+                case highestPrice
                 
             }
             enum PerformersKeys: String, CodingKey {
@@ -65,7 +65,7 @@ struct EventResults: Codable, Equatable, Hashable {
             let container = try decoder.container(keyedBy: EventKeys.self)
             title = try container.decode(String.self, forKey: .title)
             eventURL = try container.decode(String.self, forKey: .eventURL)
-            datetime_utc = try container.decodeIfPresent(Date.self, forKey: .datetime_utc)
+            datetimeLocal = try container.decode(String.self, forKey: .datetimeLocal)
             type = try container.decode(String.self, forKey: .type)
             id = try container.decode(Int.self, forKey: .id)
             let statsDictionary = try container.nestedContainer(keyedBy: EventKeys.StatsKeys.self, forKey: .stats)

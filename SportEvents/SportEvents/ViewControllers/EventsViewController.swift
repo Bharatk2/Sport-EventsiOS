@@ -216,22 +216,20 @@ extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollection
 extension EventsViewController: FavoriteEventDelegate {
     
     func update(event e: EventResults.Events, eventAction: EventAction) {
-        if eventAction == .favorited {
+        switch eventAction {
+        case .favorited:
             self.favoriteEvents.append(e)
-        } else {
+        case .removed:
             self.favoriteEvents.removeAll(where: { $0.id == e.id})
         }
     }
-    
 }
 
 extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  {
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
-        
         let label = UILabel()
         label.text = "No Favorite Events\n "
         label.font = label.font.withSize(100)
-        
         
         let attrs = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .headline)]
         return NSAttributedString(string: label.text!, attributes: attrs)
@@ -244,7 +242,12 @@ extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  
     
     
     func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
-        UIColor.tertiarySystemFill
+        if overrideUserInterfaceStyle == .dark {
+            return UIColor.darkGray
+        } else {
+        return UIColor.tertiarySystemFill
+        
+        }
     }
 }
 

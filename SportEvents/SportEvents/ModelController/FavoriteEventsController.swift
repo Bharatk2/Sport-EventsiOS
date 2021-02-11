@@ -39,7 +39,7 @@ class FavoriteEventsController: FavoriteEventDelegate {
                 print(favoriteEvents)
                 self.saveToPersistentStore()
             case .removed:
-                favoriteEvents.removeAll()
+                favoriteEvents.removeAll(where: {$0.id == e.id})
                 
             }
             self.saveToPersistentStore()
