@@ -47,7 +47,7 @@ class EventsViewController: UIViewController, LikedEventDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        self.tableView.reloadData()
         self.collectionView.reloadData()
     }
     
@@ -192,7 +192,7 @@ extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollection
         let favoriteEvent = favoriteEvents[indexPath.row]
         cell.event = favoriteEvents[indexPath.row]
         cell.eventTitle.text = favoriteEvent.title
-        cell.eventLocation.text = "\(favoriteEvent.city) \(favoriteEvent.terminalName)"
+        cell.eventLocation.text = "📍\(favoriteEvent.city) \(favoriteEvent.terminalName)"
         
         guard let imageURL = cell.event?.image else { return cell}
         EventController.shared.getImages(imageURL: imageURL) { image, _ in

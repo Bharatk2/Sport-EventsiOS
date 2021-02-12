@@ -42,7 +42,7 @@ class EventController {
         
         var urlComponents = URLComponents(url: Endpoint.events, resolvingAgainstBaseURL: false)
         let queryItems = [
-            URLQueryItem(name: "per_page", value: "25"),
+            URLQueryItem(name: "per_page", value: "100"),
             URLQueryItem(name: "client_id", value: ClientKey.clientKey)
         ]
         urlComponents?.queryItems = queryItems

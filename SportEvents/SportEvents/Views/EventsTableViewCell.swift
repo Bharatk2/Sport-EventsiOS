@@ -50,7 +50,7 @@ class EventsTableViewCell: UITableViewCell {
     func updateViews() {
         guard let event = event else { return }
         eventTitleLabel.text = event.title
-        locationLabel.text = event.city
+        locationLabel.text = "📍\(event.city)"
         timeLabel.text = date
     }
 

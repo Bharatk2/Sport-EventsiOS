@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import MapKit
 enum EventAction: Int, Codable {
     case favorited
     case removed
@@ -41,6 +42,9 @@ struct EventResults: Codable, Equatable, Hashable {
             case stats
             case performers
             case venue
+            case type
+            case id
+            
             enum StatsKeys: String, CodingKey {
                 case listingCount
                 case averagePrice
@@ -56,9 +60,14 @@ struct EventResults: Codable, Equatable, Hashable {
             enum VenueKeys: String, CodingKey {
                 case city
                 case terminalName = "name"
+                case location
+                
+                enum LocationKeys: String, CodingKey {
+                    case lat
+                    case lon
+                }
             }
-            case type
-            case id
+           
         }
        
          init(from decoder: Decoder) throws {
@@ -81,7 +90,11 @@ struct EventResults: Codable, Equatable, Hashable {
             let venueDictionary = try container.nestedContainer(keyedBy: EventKeys.VenueKeys.self, forKey: .venue)
             city = try venueDictionary.decode(String.self, forKey: .city)
             terminalName = try venueDictionary.decode(String.self, forKey: .terminalName)
+         
            
         }
     }
+    
 }
+
+

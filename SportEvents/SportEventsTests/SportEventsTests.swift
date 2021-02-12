@@ -11,7 +11,7 @@ class SportEventsTests: XCTestCase {
 
     let timeout: TimeInterval = 5
   
-    func testFetchAllEvents() throws {
+    func testFetchAllEvents() throws {
         let expectation = self.expectation(description: "fetch is succesfull")
         
         EventController.shared.getEvents { events, error in
