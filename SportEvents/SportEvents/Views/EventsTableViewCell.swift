@@ -6,14 +6,11 @@
 //
 
 import UIKit
-protocol EventFavoritedProtocol: class {
-    func didFavoriteEvent(event: EventResults.Events)
-}
+
 class EventsTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     weak var favoriteDelegate: FavoriteEventDelegate?
-    weak var delegate: EventFavoritedProtocol?
     
     // MARK: - Outlets
     @IBOutlet weak var performerImage: UIImageView!

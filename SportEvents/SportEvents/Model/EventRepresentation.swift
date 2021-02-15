@@ -8,6 +8,11 @@
 
 import Foundation
 
+enum EventAction: Int, Codable {
+    case favorited
+    case removed
+}
+
 class EventRep: Codable {
     var events: [EventRepresentation]
     class EventRepresentation: Codable {

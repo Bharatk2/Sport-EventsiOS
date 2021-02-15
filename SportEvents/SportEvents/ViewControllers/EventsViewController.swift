@@ -16,10 +16,7 @@ class EventsViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     // MARK: - Properties
-    var events = [EventResults.Events]()
-    var favoriteEvents = [EventResults.Events]()
-    var filteredEvents = [EventResults.Events]()
-    var eventController = FavoriteEventsController()
+ 
     var searching = false
     var newFavoriteEvents = [Event]()
     var changeImage = false
@@ -108,31 +105,7 @@ class EventsViewController: UIViewController {
     }
     
     
-    func fetchEvents() {
-        
-        EventController.shared.getEvents { [weak self] events, error in
-            guard let self = self else { return }
-            if let error = error {
-                NSLog("Failed to fetch events with error: \(error)")
-                return
-            }
-            
-            guard let events = events else {
-                NSLog("No events found")
-                return
-            }
-            
-            // We only want to display events
-            for event in events.events {
-                
-                self.events.append(event)
-            }
-            
-            DispatchQueue.main.async {
-                self.updateViews()
-            }
-        }
-    }
+
     
     func updateViews() {
         self.tableView.reloadData()

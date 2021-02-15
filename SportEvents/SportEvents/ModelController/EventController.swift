@@ -43,45 +43,6 @@ class EventController {
      All we need to do is call this function in the view controller viewDidLoad and assign the completion event to the view controller event
      and reload.
      */
-    func getEvents(completion: @escaping (EventResults?, Error?) -> Void) {
-        
-        var urlComponents = URLComponents(url: Endpoint.events, resolvingAgainstBaseURL: false)
-        let queryItems = [
-            URLQueryItem(name: "per_page", value: "100"),
-            URLQueryItem(name: "client_id", value: ClientKey.clientKey)
-        ]
-        urlComponents?.queryItems = queryItems
-        print(urlComponents?.url ?? "")
-        guard let requestURL = urlComponents?.url else {
-            completion(nil, NetworkError.badURL("The request url was invalid"))
-            return
-        }
-        var request = URLRequest(url: requestURL)
-        request.httpMethod = HTTPMethod.get.rawValue
-        
-        dataLoader?.loadData(from: request, completion: { data, _, error in
-            if let error = error {
-                return completion(nil, error)
-            }
-            
-            guard let data = data else {
-                completion(nil, NetworkError.badData("No data was returned"))
-                return
-            }
-            
-            let event = EventResults.self
-            
-            do {
-                let events = try self.decoder.decode(event, from: data)
-                print(events)
-                return completion(events, nil)
-            } catch {
-                
-                return completion(nil, NetworkError.badData("There was an error decoding data"))
-            }
-        })
-        
-    }
     
     func syncEvents(completion: @escaping (Error?) -> Void) {
         var representations: [EventRep.EventRepresentation] = []

@@ -5,9 +5,7 @@
 //  Created by Bharat Kumar on 2/9/21.
 //
 
-protocol LikedEventDelegate: AnyObject {
-    func likeEventButtonTapped(event: EventResults.Events)
-}
+
 import UIKit
 enum OnandOF {
     case on
@@ -18,7 +16,7 @@ class EventsDetailViewController: UIViewController {
     
     // MARK: - Properties
     var event: Event?
-    var delegate: EventFavoritedProtocol?
+
     
     var isFavorited = false
     
