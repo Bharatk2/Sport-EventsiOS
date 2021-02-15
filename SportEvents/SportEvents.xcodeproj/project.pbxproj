@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,6 +24,10 @@
 		C575CC1D25D3900800D8B153 /* Endpoint+Key+HTTPMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575CC1C25D3900800D8B153 /* Endpoint+Key+HTTPMethod.swift */; };
 		C575CC2A25D396D000D8B153 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575CC2925D396D000D8B153 /* DataLoader.swift */; };
 		C575CC3225D397B200D8B153 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C575CC3125D397B200D8B153 /* Cache.swift */; };
+		C59F5C0425D777570095EB70 /* SportEvents.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C59F5C0225D777570095EB70 /* SportEvents.xcdatamodeld */; };
+		C59F5C0A25D7785E0095EB70 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59F5C0925D7785E0095EB70 /* CoreDataStack.swift */; };
+		C59F5C1725D77A220095EB70 /* EventRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59F5C1625D77A220095EB70 /* EventRepresentation.swift */; };
+		C59F5C2225D77C350095EB70 /* Event+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59F5C2125D77C350095EB70 /* Event+Convenience.swift */; };
 		C5D1481725D4426F00F4D5C2 /* EventsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1481625D4426F00F4D5C2 /* EventsTableViewCell.swift */; };
 		C5D1482825D4806200F4D5C2 /* CollectionViewCellFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1482725D4806200F4D5C2 /* CollectionViewCellFlow.swift */; };
 		C5D1483D25D4AC5100F4D5C2 /* FavoriteEventsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D1483C25D4AC5100F4D5C2 /* FavoriteEventsController.swift */; };
@@ -76,6 +80,10 @@
 		C575CC1C25D3900800D8B153 /* Endpoint+Key+HTTPMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Endpoint+Key+HTTPMethod.swift"; sourceTree = "<group>"; };
 		C575CC2925D396D000D8B153 /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		C575CC3125D397B200D8B153 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		C59F5C0325D777570095EB70 /* SportEvents.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SportEvents.xcdatamodel; sourceTree = "<group>"; };
+		C59F5C0925D7785E0095EB70 /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		C59F5C1625D77A220095EB70 /* EventRepresentation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventRepresentation.swift; sourceTree = "<group>"; };
+		C59F5C2125D77C350095EB70 /* Event+Convenience.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Event+Convenience.swift"; sourceTree = "<group>"; };
 		C5D1481625D4426F00F4D5C2 /* EventsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsTableViewCell.swift; sourceTree = "<group>"; };
 		C5D1482725D4806200F4D5C2 /* CollectionViewCellFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellFlow.swift; sourceTree = "<group>"; };
 		C5D1483C25D4AC5100F4D5C2 /* FavoriteEventsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteEventsController.swift; sourceTree = "<group>"; };
@@ -206,7 +214,10 @@
 		C575CBF325D36BDE00D8B153 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				C59F5C0825D778190095EB70 /* CoreData */,
 				C575CBFE25D36CF100D8B153 /* Event.swift */,
+				C59F5C1625D77A220095EB70 /* EventRepresentation.swift */,
+				C59F5C0225D777570095EB70 /* SportEvents.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -249,6 +260,15 @@
 			path = "Extensions+Utilities";
 			sourceTree = "<group>";
 		};
+		C59F5C0825D778190095EB70 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				C59F5C0925D7785E0095EB70 /* CoreDataStack.swift */,
+				C59F5C2125D77C350095EB70 /* Event+Convenience.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		D4698F21CF7C82D78DE80031 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -259,7 +279,6 @@
 				D49591FC8196C3A2B941308F /* Pods-SportEventsTests.debug.xcconfig */,
 				8755CF7AB1D100CD2E5BA3E0 /* Pods-SportEventsTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -507,13 +526,17 @@
 				C575CBB625D36A3500D8B153 /* AppDelegate.swift in Sources */,
 				C575CBFF25D36CF100D8B153 /* Event.swift in Sources */,
 				C575CC0425D36D0200D8B153 /* EventController.swift in Sources */,
+				C59F5C0A25D7785E0095EB70 /* CoreDataStack.swift in Sources */,
+				C59F5C0425D777570095EB70 /* SportEvents.xcdatamodeld in Sources */,
 				C575CC3225D397B200D8B153 /* Cache.swift in Sources */,
 				C575CBB825D36A3500D8B153 /* SceneDelegate.swift in Sources */,
 				C5D1483D25D4AC5100F4D5C2 /* FavoriteEventsController.swift in Sources */,
+				C59F5C2225D77C350095EB70 /* Event+Convenience.swift in Sources */,
 				C575CC0925D36D1E00D8B153 /* EventsViewController.swift in Sources */,
 				C575CC2A25D396D000D8B153 /* DataLoader.swift in Sources */,
 				C5D1482825D4806200F4D5C2 /* CollectionViewCellFlow.swift in Sources */,
 				C5D1481725D4426F00F4D5C2 /* EventsTableViewCell.swift in Sources */,
+				C59F5C1725D77A220095EB70 /* EventRepresentation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -846,6 +869,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C59F5C0225D777570095EB70 /* SportEvents.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C59F5C0325D777570095EB70 /* SportEvents.xcdatamodel */,
+			);
+			currentVersion = C59F5C0325D777570095EB70 /* SportEvents.xcdatamodel */;
+			path = SportEvents.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C575CBAA25D36A3500D8B153 /* Project object */;
 }

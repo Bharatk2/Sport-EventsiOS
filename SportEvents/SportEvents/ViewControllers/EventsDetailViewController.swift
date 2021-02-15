@@ -17,9 +17,9 @@ fileprivate var standardDefaults = UserDefaults.standard
 class EventsDetailViewController: UIViewController {
     
     // MARK: - Properties
-    var event: EventResults.Events?
+    var event: Event?
     var delegate: EventFavoritedProtocol?
-    var favoriteEvents = [EventResults.Events?]()
+    
     var isFavorited = false
     
     weak var likedEventDelegate: FavoriteEventDelegate?
@@ -73,32 +73,39 @@ class EventsDetailViewController: UIViewController {
         } else {
             setImageStatus = "off"
         }
+        var stat = setImageStatus == "on" ? "off" : "on"
+        
+       
       
     }
 
     // MARK: - Actions
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
         guard let event = event else { return }
-        determineEvent(ev: event)
-        
+determineEvent(ev: event)
+    
     }
+    
     // MARK: - Methods
-    func determineEvent(ev: EventResults.Events) {
+    func determineEvent(ev: Event) {
         guard let event = event else { return }
         var stat = setImageStatus == "on" ? "off" : "on"
         setImageStatus = stat
+        
         if event.id == ev.id {
             defaults.set(stat, forKey: "imgStatus")
             favoriteButton.isSelected = !favoriteButton.isSelected
             if stat == "on" {
-               
+                stat = "off"
                 guard let image = UIImage(named: "iconLike") else { return }
-                favoriteButton.setImage(image, for: .selected)
+               
                 likedEventDelegate?.update(event: event, eventAction: .favorited)
             } else {
-                stat = "off"
+                stat = "on"
                 guard let image = UIImage(named: "Like") else { return }
-                favoriteButton.setImage(image, for: .normal)
+               
+              
+             
                 likedEventDelegate?.update(event: event, eventAction: .removed)
             }
         }
@@ -106,21 +113,17 @@ class EventsDetailViewController: UIViewController {
     
     private func updateViews() {
         guard let event = event,
-              let averagePrice = event.averagePrice,
-              let listingCount = event.listingCount,
-              let lowestPrice = event.lowestPrice,
-              let highestPrice = event.highestPrice
+              let performerImage = event.image
         else { return }
         
         self.eventTitle.text = event.title
         self.performerName.text = event.name
         self.eventDateLabel.text = date
-        self.listingCountLabel.text = "Listing Count: \(listingCount)"
-        self.averagePriceLabel.text = "Average Count: \(averagePrice)"
-        self.lowestPriceLabel.text = "Lowest Count: \(lowestPrice)"
-        self.highestPriceLabel.text = "Highest Count: \(highestPrice)"
-        let performerImage = event.image
-        
+        self.listingCountLabel.text = "Listing Count: \(event.listingCount)"
+        self.averagePriceLabel.text = "Average Count: \(event.averagePrice)"
+        self.lowestPriceLabel.text = "Lowest Count: \(event.lowestPrice)"
+        self.highestPriceLabel.text = "Highest Count: \(event.highestPrice)"
+     
         EventController.shared.getImages(imageURL: performerImage) { image, _ in
             DispatchQueue.main.async {
                 self.performerImage.image = image

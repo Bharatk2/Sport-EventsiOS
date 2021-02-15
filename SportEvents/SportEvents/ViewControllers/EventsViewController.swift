@@ -6,8 +6,9 @@
 //
 
 import UIKit
+import CoreData
 import DZNEmptyDataSet
-class EventsViewController: UIViewController, LikedEventDelegate {
+class EventsViewController: UIViewController {
     
     // MARK: - Outlets
     @IBOutlet var collectionView: UICollectionView!
@@ -20,20 +21,47 @@ class EventsViewController: UIViewController, LikedEventDelegate {
     var filteredEvents = [EventResults.Events]()
     var eventController = FavoriteEventsController()
     var searching = false
+    var newFavoriteEvents = [Event]()
+    var changeImage = false
     
+    
+    var eventFetchedResultsController: NSFetchedResultsController<Event>!
+    private func setUpFetchResultController(with predicate: NSPredicate = NSPredicate(value: true)) {
+        self.eventFetchedResultsController = nil
+        let fetchRequest: NSFetchRequest<Event> = Event.fetchRequest()
+    
+        fetchRequest.predicate = predicate
+        let context = CoreDataStack.shared.mainContext
+        //        context.reset()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+      
+        frc.delegate = self
+        do {
+            
+            try frc.performFetch()
+        } catch {
+            print("Error performing initial fetch inside fetchedResultsController: \(error)")
+        }
+        self.eventFetchedResultsController = frc
+    }
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        searchBar.isHidden = true
+        searchBar.delegate = self
+        searchBar(searchBar, textDidChange: "")
         tableView.delegate = self
         tableView.dataSource = self
+     
         collectionView.delegate = self
         collectionView.dataSource = self
-        fetchEvents()
-        favoriteEventss()
+        //        fetchEvents()
+        //        favoriteEventss()
+        fetchNewEvents()
+        eventFetchedResultsController.delegate = self
         collectionView.emptyDataSetSource = self
         collectionView.emptyDataSetDelegate = self
-        configureSearchController()
+       
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = layout
@@ -41,39 +69,44 @@ class EventsViewController: UIViewController, LikedEventDelegate {
         let flowlayout = UICollectionViewFlowLayout()
         collectionView.accessibilityScroll(.right)
         flowlayout.scrollDirection = .horizontal
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Event")
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+        do {
+            try CoreDataStack.shared.mainContext.execute(deleteRequest)
+          
+        } catch let error as NSError {
+          NSLog("error found in deleting: :\(error)")
+        }
         
         // Do any additional setup after loading the view.
     }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.tableView.reloadData()
         self.collectionView.reloadData()
     }
     
+
     // MARK: - Methods
     fileprivate func setupCollectionView() {
         collectionView?.backgroundColor = .white
         
     }
+   
     
-    func likeEventButtonTapped(event: EventResults.Events) {
-        favoriteEvents.append(event)
-    }
-    
-    func favoriteEventss() {
-        eventController.loadFromPersistentStoreEvents {[weak self] events, _ in
-            guard let self = self else { return }
-            print("this is favorite events: \(events)")
-            for event in events {
-                self.favoriteEvents.append(event)
-            }
-            
+    private func fetchNewEvents() {
+        EventController.shared.syncEvents { error in
             DispatchQueue.main.async {
-                self.collectionView.reloadData()
+                if let error = error {
+                    NSLog("Error trying to fetch events: \(error)")
+                } else {
+                    self.tableView.reloadData()
+                    self.collectionView.reloadData()
+                }
             }
         }
     }
+    
     
     func fetchEvents() {
         
@@ -115,18 +148,22 @@ class EventsViewController: UIViewController, LikedEventDelegate {
         if segue.identifier == "EventDetailSegue" {
             if let eventDetailVC = segue.destination as? EventsDetailViewController,
                let indexPath = tableView.indexPathForSelectedRow{
-                let event = events[indexPath.row]
+                let event = eventFetchedResultsController.object(at: indexPath)
                 eventDetailVC.event = event
-                
-                eventDetailVC.likedEventDelegate = self 
+                if eventDetailVC.event?.id == event.id {
+                    
+                }
+                eventDetailVC.likedEventDelegate = self
             }
         } else if segue.identifier == "CollectionSegue" {
             if let eventDetailVC = segue.destination as? EventsDetailViewController,
                let cell = sender as? ContentCell,
                let collectionIndex = collectionView.indexPath(for: cell) {
-                let collectionEvent =  favoriteEvents[collectionIndex.row]
+                let collectionEvent =  newFavoriteEvents[collectionIndex.row]
                 eventDetailVC.event = collectionEvent
+                
                 eventDetailVC.likedEventDelegate = self
+                
             }
         }
     }
@@ -135,37 +172,26 @@ class EventsViewController: UIViewController, LikedEventDelegate {
 // MARK: - Extensions
 extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searching {
-            return filteredEvents.count
-        } else {
-            return events.count
-        }
+        
+        return eventFetchedResultsController.sections?[section].numberOfObjects ?? 0
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "EventsTableViewCell", for: indexPath) as? EventsTableViewCell else { return UITableViewCell() }
         
-        if searching {
-            cell.event = filteredEvents[indexPath.row]
-            cell.favoriteDelegate = self
-            guard let imageURL = cell.event?.image else { return cell }
-            EventController.shared.getImages(imageURL: imageURL) { image, _ in
-                DispatchQueue.main.async {
-                    cell.performerImage.image = image
-                    
-                }
-            }
-        } else {
-            cell.event = events[indexPath.row]
-            cell.favoriteDelegate = self
-            guard let imageURL = cell.event?.image else { return cell }
-            EventController.shared.getImages(imageURL: imageURL) { image, _ in
-                DispatchQueue.main.async {
-                    cell.performerImage.image = image
-                    
-                }
+        
+        cell.corEvent = eventFetchedResultsController.object(at: indexPath)
+        
+        
+        guard let imageURL = cell.corEvent?.image else { return cell }
+        EventController.shared.getImages(imageURL: imageURL) { image, _ in
+            DispatchQueue.main.async {
+                cell.performerImage.image = image
+                
             }
         }
+        
         cell.performerImage.layer.cornerRadius = 12
         
         return cell
@@ -183,16 +209,18 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
 extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return favoriteEvents.count
+        return newFavoriteEvents.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ContentCell", for: indexPath) as? ContentCell else { return UICollectionViewCell() }
         cell.favoriteDelegate = self
-        let favoriteEvent = favoriteEvents[indexPath.row]
-        cell.event = favoriteEvents[indexPath.row]
-        cell.eventTitle.text = favoriteEvent.title
-        cell.eventLocation.text = "📍\(favoriteEvent.city) \(favoriteEvent.terminalName)"
+        let favoriteEvent = newFavoriteEvents[indexPath.row]
+        cell.event = favoriteEvent
+//        cell.eventTitle.text = favoriteEvent.title
+//        guard let city = favoriteEvent.city,
+//              let terminal = favoriteEvent.terminalName else { return cell }
+//        cell.eventLocation.text = "📍\(city) \(terminal)"
         
         guard let imageURL = cell.event?.image else { return cell}
         EventController.shared.getImages(imageURL: imageURL) { image, _ in
@@ -213,17 +241,17 @@ extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollection
     
 }
 
-extension EventsViewController: FavoriteEventDelegate {
-    
-    func update(event e: EventResults.Events, eventAction: EventAction) {
-        switch eventAction {
-        case .favorited:
-            self.favoriteEvents.append(e)
-        case .removed:
-            self.favoriteEvents.removeAll(where: { $0.id == e.id})
-        }
-    }
-}
+//extension EventsViewController: FavoriteEventDelegate {
+//
+//    func update(event e: EventResults.Events, eventAction: EventAction) {
+//        switch eventAction {
+//        case .favorited:
+//            self.favoriteEvents.append(e)
+//        case .removed:
+//            self.favoriteEvents.removeAll(where: { $0.id == e.id})
+//        }
+//    }
+//}
 
 extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  {
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
@@ -240,39 +268,109 @@ extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  
         return UIImage(named: "Like")
     }
     
-    
     func backgroundColor(forEmptyDataSet scrollView: UIScrollView!) -> UIColor! {
         if overrideUserInterfaceStyle == .dark {
             return UIColor.darkGray
         } else {
-        return UIColor.tertiarySystemFill
-        
+            return UIColor.tertiarySystemFill
+            
         }
     }
 }
 
-extension EventsViewController: UISearchBarDelegate, UISearchResultsUpdating {
-    func configureSearchController() {
-        let searchController = UISearchController()
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Enter type of event"
-        navigationItem.searchController = searchController
-        searchController.obscuresBackgroundDuringPresentation = false
-    }
-    func updateSearchResults(for searchController: UISearchController) {
-        guard let filter = searchController.searchBar.text,
-              !filter.isEmpty else { return }
+
+extension EventsViewController: FavoriteEventDelegate  {
+    
+    //MARK: - Initializer
+    
+    
+    
+    // MARK: - Methods
+    func update(event e: Event, eventAction: EventAction) {
         
-        searching = true
-        filteredEvents = events.filter({ $0.type.lowercased().contains(filter.lowercased()) })
-        tableView.reloadData()
+        switch eventAction {
+        case .favorited:
+            newFavoriteEvents.append(e)
+        
+            print(newFavoriteEvents)
+        
+        case .removed:
+            newFavoriteEvents.removeAll(where: {$0.id == e.id})
+    
+         
+        }
+        try? CoreDataStack.shared.save(context: CoreDataStack.shared.container.newBackgroundContext())
         
     }
     
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searching = false
+   
+    
+    // MARK: Persistent Store
+    
+    
+    
+    
+    
+    
+    
+    
+}
+extension EventsViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange sectionInfo: NSFetchedResultsSectionInfo,
+                    atSectionIndex sectionIndex: Int,
+                    for type: NSFetchedResultsChangeType) {
+        switch type {
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .automatic)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .automatic)
+        default:
+            break
+        }
+    }
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange anObject: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .update:
+            guard let indexPath = indexPath else { return }
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        case .move:
+            guard let oldIndexPath = indexPath,
+                  let newIndexPath = newIndexPath else { return }
+            tableView.deleteRows(at: [oldIndexPath], with: .automatic)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .delete:
+            guard let indexPath = indexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            break
+        }
+    }
+}
+
+extension EventsViewController: UISearchBarDelegate, UISearchDisplayDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if !searchText.isEmpty {
+            var predicate: NSPredicate = NSPredicate()
+            predicate = NSPredicate(format: "name contains[c] '\(searchText)'")
+         
+            setUpFetchResultController(with: predicate)
+        } else {
+            setUpFetchResultController()
+        }
         tableView.reloadData()
-        
     }
 }

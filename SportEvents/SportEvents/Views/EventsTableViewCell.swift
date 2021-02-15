@@ -21,17 +21,20 @@ class EventsTableViewCell: UITableViewCell {
     @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet weak var cellView: UIView!
+    @IBOutlet weak var favoriteImage: UIImageView!
     
     // MARK: - Computed Properties
-    var event: EventResults.Events? {
+    
+    var corEvent: Event? {
         didSet {
-            updateViews()
+            updateViewsCore()
         }
     }
     
+    
     var date: String {
         let formatter = DateFormatter()
-        guard let event = event?.datetimeLocal else { return "" }
+        guard let event = corEvent?.datetimeLocal else { return "" }
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         let date = formatter.date(from: event)
         let formattedDisplayDate = DateFormatter()
@@ -42,15 +45,18 @@ class EventsTableViewCell: UITableViewCell {
     }
     
     // MARK: - Methods
-    @objc private func handleFavoriteButtonTapped() {
-        guard let event = event else { return }
-        delegate?.didFavoriteEvent(event: event)
-    }
+//    @objc private func handleFavoriteButtonTapped() {
+//        guard let event = corEvent else { return }
+//        delegate?.didFavoriteEvent(event: event)
+//    }
+//    
+
     
-    func updateViews() {
-        guard let event = event else { return }
+    func updateViewsCore() {
+        guard let event = corEvent,
+              let city = event.city else { return }
         eventTitleLabel.text = event.title
-        locationLabel.text = "📍\(event.city)"
+        locationLabel.text = "📍\(city)"
         timeLabel.text = date
     }
 

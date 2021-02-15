@@ -6,24 +6,23 @@
 //
 
 import Foundation
-
+import UIKit
 protocol FavoriteEventDelegate: class {
-    func update(event e: EventResults.Events, eventAction: EventAction)
+    func update(event e: Event, eventAction: EventAction)
 }
-
-class FavoriteEventsController: FavoriteEventDelegate {
+class FavoriteEventsController {
     
     // MARK: - Properties
-    var events = [EventResults.Events]()
-    static var shared = FavoriteEventsController()
+    var newFavoriteEvents = [EventResults.Events]()
+    
     
     //MARK: - Initializer
     init() {
-        saveToPersistentStore()
+        loadFromPersistentStore()
     }
     
     func findEventIndex(_ t: EventResults.Events) -> Int? {
-        if let index = events.firstIndex(where: { $0 == t }) {
+        if let index = newFavoriteEvents.firstIndex(where: { $0 == t }) {
             return index
         } else {
             return nil
@@ -31,21 +30,18 @@ class FavoriteEventsController: FavoriteEventDelegate {
     }
     // MARK: - Methods
     func update(event e: EventResults.Events, eventAction: EventAction) {
-        loadFromPersistentStoreEvents { events, _ in
-            var favoriteEvents = events
+       
             switch eventAction {
             case .favorited:
-                favoriteEvents.append(e)
-                print(favoriteEvents)
-                self.saveToPersistentStore()
+                newFavoriteEvents.append(e)
+               
+                print(newFavoriteEvents)
             case .removed:
-                favoriteEvents.removeAll(where: {$0.id == e.id})
+                newFavoriteEvents.removeAll(where: {$0.id == e.id})
                 
             }
             self.saveToPersistentStore()
-        }
         
-        saveToPersistentStore()
     }
     
     // MARK: Persistent Store
@@ -66,7 +62,7 @@ class FavoriteEventsController: FavoriteEventDelegate {
         let encoder = PropertyListEncoder()
         
         do {
-            let eventData = try encoder.encode(events)
+            let eventData = try encoder.encode(newFavoriteEvents)
             
             guard let eventURL = eventURL else { return }
             
@@ -77,20 +73,19 @@ class FavoriteEventsController: FavoriteEventDelegate {
         }
     }
     
-    func loadFromPersistentStoreEvents(completion: @escaping ([EventResults.Events], Error?) -> Void) {
-        
+    func loadFromPersistentStore() {
+
         do {
             guard let eventURL = eventURL else { return }
-            
+
             let eventData = try Data(contentsOf: eventURL)
             let decoder = PropertyListDecoder()
-            let decodedEvent = try decoder.decode([EventResults.Events].self, from: eventData)
-            print(decodedEvent)
-            self.events = decodedEvent
-            completion(decodedEvent, nil)
+            let decodedCart = try decoder.decode([EventResults.Events].self, from: eventData)
             
+
+            self.newFavoriteEvents = decodedCart
         } catch {
-            print("Unable to open event plist: \(error)")
+            print("Unable to open shopping cart plist: \(error)")
         }
     }
     
