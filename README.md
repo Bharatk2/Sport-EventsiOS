@@ -12,7 +12,7 @@
 - [x] The Events fetched succesfully from SeatGeel API Platform with URLSession.
 - [x] Filtered the events to search by its type.
 - [x] Implemented Image fetch request by using Cache.
-- [x] Implemented FileManager Persistence for favorite events
+- [x] Implemented CoreData to fetch events entity with FetchResultController & persisted favorite events 
 - [x] Implemented Unit Test functions
 
 
