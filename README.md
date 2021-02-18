@@ -3,8 +3,14 @@
 <br />
 
 <p align="row">
-<img src= "https://media.giphy.com/media/Yv9hAwlHkxznBSUeTW/giphy.gif" width="400" >
-<img src= "https://media.giphy.com/media/gcyj4t0PeseJWqvsDf/giphy.gif" width="400" >
+  - Search Filter:
+<img src= "https://media.giphy.com/media/Q8u918ACtwbipyS2ev/giphy.gif" width="400" >
+  - Adding Favorite Events to Horizontal CollectionView
+<img src= "https://media.giphy.com/media/t0n3SjFCRze4GgcGS0/giphy.gif" width="400" >
+  - Unfavoriting Events
+  <img src= "https://media.giphy.com/media/hFSqJXM5XSH6eqQdye/giphy.gif" width="400" >
+  - Persisting Events
+  <img src= "https://media.giphy.com/media/dJLer7tB33o4kNnwZe/giphy.gif" width="400" >
 </p>
 
 ## Features
