@@ -22,7 +22,6 @@ class EventsViewController: UIViewController {
     // MARK: - Properties
     
     var searching = false
-  var newFavoriteEvents = [Event]()
     var changeImage = false
     
     var eventFetchedResultsController: NSFetchedResultsController<Event>!
@@ -33,7 +32,7 @@ class EventsViewController: UIViewController {
         fetchRequest.predicate = predicate
         let context = CoreDataStack.shared.mainContext
         //        context.reset()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "isFavorited", ascending: true)]
         let frc = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
       
         frc.delegate = self
@@ -129,16 +128,16 @@ class EventsViewController: UIViewController {
                 if eventDetailVC.event?.id == event.id {
                     
                 }
-                eventDetailVC.likedEventDelegate = self
+            
             }
         } else if segue.identifier == "CollectionSegue" {
             if let eventDetailVC = segue.destination as? EventsDetailViewController,
                let cell = sender as? ContentCell,
                let collectionIndex = collectionView.indexPath(for: cell) {
-                let collectionEvent =  newFavoriteEvents[collectionIndex.row]
+                let eventFetchcontroller =  eventFetchedResultsController.map { $0.fetchedObjects?.filter { $0.isFavorited == true}.map { $0 }}
+                guard let eventFetcher = eventFetchcontroller else  { return }
+                let collectionEvent =  eventFetcher?[collectionIndex.row]
                 eventDetailVC.event = collectionEvent
-                
-                eventDetailVC.likedEventDelegate = self
                 
             }
         }
@@ -185,26 +184,25 @@ extension EventsViewController: UITableViewDelegate, UITableViewDataSource {
 extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return newFavoriteEvents.count
+        let eventFetchcontroller =  eventFetchedResultsController.map { $0.fetchedObjects?.filter { $0.isFavorited == true}.map { $0 }}
+        guard let eventFetcher = eventFetchcontroller else  { return 0 }
+        return eventFetcher?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ContentCell", for: indexPath) as? ContentCell else { return UICollectionViewCell() }
-        cell.favoriteDelegate = self
-        
-        let favoriteEvent = newFavoriteEvents[indexPath.row]
+     
+        let eventFetchcontroller =  eventFetchedResultsController.map { $0.fetchedObjects?.filter { $0.isFavorited == true}.map { $0 }}
+        guard let eventFetcher = eventFetchcontroller else  { return cell}
+        let favoriteEvent = eventFetcher?[indexPath.row]
         cell.event = favoriteEvent
-//        cell.eventTitle.text = favoriteEvent.title
-//        guard let city = favoriteEvent.city,
-//              let terminal = favoriteEvent.terminalName else { return cell }
-//        cell.eventLocation.text = "📍\(city) \(terminal)"
-        
         guard let imageURL = cell.event?.image else { return cell}
         EventController.shared.getImages(imageURL: imageURL) { image, _ in
             DispatchQueue.main.async {
                 cell.eventImage.image = image
             }
         }
+        try? CoreDataStack.shared.save()
         
         cell.layer.cornerRadius = 12
         cell.cellView.layer.cornerRadius = 12
@@ -217,18 +215,6 @@ extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollection
     }
     
 }
-
-//extension EventsViewController: FavoriteEventDelegate {
-//
-//    func update(event e: EventResults.Events, eventAction: EventAction) {
-//        switch eventAction {
-//        case .favorited:
-//            self.favoriteEvents.append(e)
-//        case .removed:
-//            self.favoriteEvents.removeAll(where: { $0.id == e.id})
-//        }
-//    }
-//}
 
 extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  {
     func title(forEmptyDataSet scrollView: UIScrollView) -> NSAttributedString? {
@@ -255,37 +241,6 @@ extension EventsViewController: DZNEmptyDataSetDelegate, DZNEmptyDataSetSource  
     }
 }
 
-
-extension EventsViewController: FavoriteEventDelegate  {
-    
-    //MARK: - Initializer
-    
-    
-    
-    // MARK: - Methods
-    func update(event e: Event, eventAction: EventAction) {
-        
-        switch eventAction {
-        case .favorited:
-            var event = e
-            newFavoriteEvents.append(e)
-            
-        
-            print(newFavoriteEvents)
-        
-        case .removed:
-            newFavoriteEvents.removeAll(where: {$0.id == e.id})
-    
-         
-        }
-        try? CoreDataStack.shared.save(context: CoreDataStack.shared.container.newBackgroundContext())
-        
-    }
-    
-   
-    
-    // MARK: Persistent Store
-}
 extension EventsViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()

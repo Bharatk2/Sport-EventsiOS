@@ -12,11 +12,6 @@ class EventsDetailViewController: UIViewController {
     
     // MARK: - Properties
     var event: Event?
-  
-    
-    var isFavorited = false
-    
-    weak var likedEventDelegate: FavoriteEventDelegate?
     
     // MARK: - Outlets
     @IBOutlet weak var performerImage: UIImageView!
@@ -70,12 +65,7 @@ class EventsDetailViewController: UIViewController {
         guard let event = event else { return }
         event.isFavorited.toggle()
         sender.setImage(event.isFavorited ? UIImage(named: "iconLike") : UIImage(named: "Like"), for: .normal)
-        if  event.isFavorited == true {
-            
-            likedEventDelegate?.update(event: event, eventAction: .favorited)
-        }else {
-            likedEventDelegate?.update(event: event, eventAction: .removed)
-        }
+        
     }
 
     // MARK: - Methods

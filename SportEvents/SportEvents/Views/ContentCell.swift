@@ -12,17 +12,12 @@ class ContentCell: UICollectionViewCell {
     // MARK: - Properties
     weak var delegate: EventsViewController?
     weak var favoriteDelegate: FavoriteEventDelegate?
+    
     var event: Event? {
         didSet {
             updateViewsCore()
         }
     }
-    var favoriteEvent: Event2? {
-        didSet {
-            updateViewsCore()
-        }
-    }
-    
     // MARK: - Outlets
     @IBOutlet weak var eventImage: UIImageView!
     @IBOutlet weak var eventTitle: UILabel!

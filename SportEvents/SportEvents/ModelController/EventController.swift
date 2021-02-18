@@ -8,12 +8,12 @@
 import Foundation
 import CoreData
 import UIKit
+
 enum NetworkError: Error {
     case  noData(String), badData(String)
     case failedFetch(String), badURL(String)
     case badError(String)
 }
-
 
 class EventController {
     
