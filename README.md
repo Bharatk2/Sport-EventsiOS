@@ -3,7 +3,8 @@
 <br />
 
 <p align="row">
-Search Filter <img src= "https://media.giphy.com/media/Q8u918ACtwbipyS2ev/giphy.gif" width="400" >
+  ## Installation
+<img src= "https://media.giphy.com/media/Q8u918ACtwbipyS2ev/giphy.gif" width="400" >
 <img src= "https://media.giphy.com/media/t0n3SjFCRze4GgcGS0/giphy.gif" width="400" >
 <img src= "https://media.giphy.com/media/hFSqJXM5XSH6eqQdye/giphy.gif" width="400" >
 <img src= "https://media.giphy.com/media/dJLer7tB33o4kNnwZe/giphy.gif" width="400" >
