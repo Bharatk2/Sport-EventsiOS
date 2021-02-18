@@ -1,9 +1,8 @@
 
 # Sport Events
 <br />
-
+## Search Filter, Favorite Events/UnFavorite Events, Horizontal Scrollable CollectionView, Persisting Favorite Events.
 <p align="row">
-  ## Installation
 <img src= "https://media.giphy.com/media/Q8u918ACtwbipyS2ev/giphy.gif" width="400" >
 <img src= "https://media.giphy.com/media/t0n3SjFCRze4GgcGS0/giphy.gif" width="400" >
 <img src= "https://media.giphy.com/media/hFSqJXM5XSH6eqQdye/giphy.gif" width="400" >
