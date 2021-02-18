@@ -17,7 +17,11 @@ class ContentCell: UICollectionViewCell {
             updateViewsCore()
         }
     }
-    
+    var favoriteEvent: Event2? {
+        didSet {
+            updateViewsCore()
+        }
+    }
     
     // MARK: - Outlets
     @IBOutlet weak var eventImage: UIImageView!

@@ -7,7 +7,7 @@
 
 
 import Foundation
-
+import CoreData
 enum EventAction: Int, Codable {
     case favorited
     case removed
@@ -93,3 +93,6 @@ class EventRep: Codable {
     }
 }
 
+class FavoritedEvents: NSManagedObject {
+    @NSManaged var events: Event
+}

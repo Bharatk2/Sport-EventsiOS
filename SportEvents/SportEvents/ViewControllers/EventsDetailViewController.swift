@@ -7,16 +7,12 @@
 
 
 import UIKit
-enum OnandOF {
-    case on
-    case off
-}
-fileprivate var standardDefaults = UserDefaults.standard
+
 class EventsDetailViewController: UIViewController {
     
     // MARK: - Properties
     var event: Event?
-
+  
     
     var isFavorited = false
     
@@ -65,50 +61,24 @@ class EventsDetailViewController: UIViewController {
         super.viewDidLoad()
         updateViews()
         performerImage.layer.cornerRadius = 12
-        if let imgStatus = defaults.string(forKey: "imgStatus")
-        {
-            setImageStatus = imgStatus
-        } else {
-            setImageStatus = "off"
-        }
-        var stat = setImageStatus == "on" ? "off" : "on"
-        
-       
+      
       
     }
 
     // MARK: - Actions
     @IBAction func favoriteButtonTapped(_ sender: UIButton) {
         guard let event = event else { return }
-determineEvent(ev: event)
-    
-    }
-    
-    // MARK: - Methods
-    func determineEvent(ev: Event) {
-        guard let event = event else { return }
-        var stat = setImageStatus == "on" ? "off" : "on"
-        setImageStatus = stat
-        
-        if event.id == ev.id {
-            defaults.set(stat, forKey: "imgStatus")
-            favoriteButton.isSelected = !favoriteButton.isSelected
-            if stat == "on" {
-                stat = "off"
-                guard let image = UIImage(named: "iconLike") else { return }
-               
-                likedEventDelegate?.update(event: event, eventAction: .favorited)
-            } else {
-                stat = "on"
-                guard let image = UIImage(named: "Like") else { return }
-               
-              
-             
-                likedEventDelegate?.update(event: event, eventAction: .removed)
-            }
+        event.isFavorited.toggle()
+        sender.setImage(event.isFavorited ? UIImage(named: "iconLike") : UIImage(named: "Like"), for: .normal)
+        if  event.isFavorited == true {
+            
+            likedEventDelegate?.update(event: event, eventAction: .favorited)
+        }else {
+            likedEventDelegate?.update(event: event, eventAction: .removed)
         }
     }
-    
+
+    // MARK: - Methods
     private func updateViews() {
         guard let event = event,
               let performerImage = event.image
@@ -121,7 +91,8 @@ determineEvent(ev: event)
         self.averagePriceLabel.text = "Average Count: \(event.averagePrice)"
         self.lowestPriceLabel.text = "Lowest Count: \(event.lowestPrice)"
         self.highestPriceLabel.text = "Highest Count: \(event.highestPrice)"
-     
+        favoriteButton.setImage(event.isFavorited ? UIImage(named: "iconLike") : UIImage(named: "Like"), for: .normal)
+        
         EventController.shared.getImages(imageURL: performerImage) { image, _ in
             DispatchQueue.main.async {
                 self.performerImage.image = image

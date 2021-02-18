@@ -8,6 +8,10 @@
 import UIKit
 import CoreData
 import DZNEmptyDataSet
+
+protocol TrueButtonProtocol: class {
+    var favoriteTapped: Bool { get set }
+}
 class EventsViewController: UIViewController {
     
     // MARK: - Outlets
@@ -16,11 +20,10 @@ class EventsViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     // MARK: - Properties
- 
-    var searching = false
-    var newFavoriteEvents = [Event]()
-    var changeImage = false
     
+    var searching = false
+  var newFavoriteEvents = [Event]()
+    var changeImage = false
     
     var eventFetchedResultsController: NSFetchedResultsController<Event>!
     private func setUpFetchResultController(with predicate: NSPredicate = NSPredicate(value: true)) {
@@ -188,6 +191,7 @@ extension EventsViewController: UICollectionViewDelegateFlowLayout, UICollection
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ContentCell", for: indexPath) as? ContentCell else { return UICollectionViewCell() }
         cell.favoriteDelegate = self
+        
         let favoriteEvent = newFavoriteEvents[indexPath.row]
         cell.event = favoriteEvent
 //        cell.eventTitle.text = favoriteEvent.title
@@ -263,7 +267,9 @@ extension EventsViewController: FavoriteEventDelegate  {
         
         switch eventAction {
         case .favorited:
+            var event = e
             newFavoriteEvents.append(e)
+            
         
             print(newFavoriteEvents)
         
@@ -279,14 +285,6 @@ extension EventsViewController: FavoriteEventDelegate  {
    
     
     // MARK: Persistent Store
-    
-    
-    
-    
-    
-    
-    
-    
 }
 extension EventsViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

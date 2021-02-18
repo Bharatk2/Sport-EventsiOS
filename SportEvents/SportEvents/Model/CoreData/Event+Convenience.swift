@@ -24,6 +24,7 @@ extension Event {
                                         url: String,
                                         city: String,
                                         terminalName: String,
+                                        isFavorited: Bool = false,
                                         context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         self.init(context: context)
         self.id = id
@@ -40,6 +41,8 @@ extension Event {
         self.url = url
         self.city = city
         self.terminalName = terminalName
+        self.isFavorited = isFavorited
+ 
     }
 
     @discardableResult convenience init?(representation: EventRep.EventRepresentation,
@@ -63,3 +66,4 @@ extension Event {
                   terminalName: representation.terminalName)
     }
 }
+
