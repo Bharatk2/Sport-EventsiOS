@@ -1,7 +1,7 @@
 
 # Sport Events
 <br />
-## Search Filter, Favorite Events/UnFavorite Events, Horizontal Scrollable CollectionView, Persisting Favorite Events.
+- Search Filter, Favorite Events/UnFavorite Events, Horizontal Scrollable CollectionView, Persisting Favorite Events.
 <p align="row">
 <img src= "https://media.giphy.com/media/Q8u918ACtwbipyS2ev/giphy.gif" width="400" >
 <img src= "https://media.giphy.com/media/t0n3SjFCRze4GgcGS0/giphy.gif" width="400" >
